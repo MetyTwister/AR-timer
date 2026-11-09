@@ -3,41 +3,107 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101820" />
-    <title>GPIO 17 Monitor</title>
+    <title>RC Lap Timer</title>
     <link rel="stylesheet" href="/styles.css" />
     <script src="/app.js" defer></script>
   </head>
-  <body class="state-connecting">
-    <main class="monitor" aria-labelledby="page-title">
+  <body data-state="connecting">
+    <main class="app">
       <header class="topbar">
-        <div class="brand-mark" aria-hidden="true">17</div>
-        <div>
-          <p class="eyebrow">RASPBERRY PI · INPUT MONITOR</p>
-          <h1 id="page-title">GPIO 17</h1>
-        </div>
-        <div class="connection" id="connection" role="status">
-          <span class="connection-dot" aria-hidden="true"></span>
-          <span id="connection-text">Connecting</span>
-        </div>
+        <h1>RC Lap Timer</h1>
+        <span class="conn" id="conn" role="status">Connecting…</span>
       </header>
 
-      <section class="status-panel" aria-live="polite" aria-atomic="true">
-        <p class="status-label">CURRENT PIN STATE</p>
-        <div class="state-icon" aria-hidden="true">
-          <span class="state-icon-inner"></span>
+      <p class="banner banner-fault" id="fault" role="alert" hidden></p>
+
+      <section class="race-panel" aria-label="Race">
+        <div class="state-row">
+          <span class="badge" id="state-badge">—</span>
+          <span class="state-detail" id="state-detail">Waiting for the timer…</span>
         </div>
-        <h2 id="pin-state">Reading pin…</h2>
-        <p class="status-detail" id="status-detail">Waiting for the Raspberry Pi</p>
+        <div class="clock" id="clock" aria-live="off">0:00.000</div>
+        <div class="stats">
+          <div><span class="label">Laps</span><span class="value" id="lap-count">0</span></div>
+          <div><span class="label">Last lap</span><span class="value" id="last-lap">—</span></div>
+          <div><span class="label">Best lap</span><span class="value" id="best-lap">—</span></div>
+          <div><span class="label">Remaining</span><span class="value" id="remaining">—</span></div>
+        </div>
+        <div class="controls">
+          <button type="button" class="btn btn-start" id="btn-start" disabled>Start race</button>
+          <button type="button" class="btn btn-pause" id="btn-pause" disabled>Pause</button>
+          <button type="button" class="btn btn-stop" id="btn-stop" disabled>Stop</button>
+          <button type="button" class="btn btn-reset" id="btn-reset" disabled>Clear laps</button>
+        </div>
+        <p class="message" id="message" role="alert" hidden></p>
       </section>
 
-      <footer class="footer">
-        <span>BCM GPIO 17</span>
-        <span class="footer-divider" aria-hidden="true">·</span>
-        <span>Pull-up input</span>
-        <span class="footer-divider" aria-hidden="true">·</span>
-        <span id="last-updated">No reading yet</span>
-      </footer>
+      <div class="columns">
+        <section class="card laps-card" aria-labelledby="laps-title">
+          <h2 id="laps-title">Laps</h2>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr><th scope="col">Lap</th><th scope="col">Lap time</th><th scope="col">Total</th></tr>
+              </thead>
+              <tbody id="lap-rows">
+                <tr class="empty"><td colspan="3">No laps yet</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <div class="side">
+          <section class="card" aria-labelledby="settings-title">
+            <h2 id="settings-title">Race settings</h2>
+            <form id="settings-form" novalidate>
+              <fieldset id="settings-fieldset">
+                <label>
+                  <span>Start mode</span>
+                  <select name="start_mode">
+                    <option value="auto">Automatic – timer starts when countdown ends</option>
+                    <option value="gate">Gate – timer starts on first gate passage</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Countdown (seconds)</span>
+                  <input type="number" name="countdown_s" min="0" max="600" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  <span>Max race duration (seconds, 0 = no limit)</span>
+                  <input type="number" name="max_duration_s" min="0" max="86400" step="1" inputmode="numeric" />
+                </label>
+                <label>
+                  <span>Minimum lap time / gate lockout (seconds)</span>
+                  <input type="number" name="min_lap_s" min="0.1" max="600" step="0.1" inputmode="decimal" />
+                </label>
+                <div class="form-row">
+                  <button type="submit" class="btn">Save settings</button>
+                  <span class="hint" id="settings-hint"></span>
+                </div>
+              </fieldset>
+            </form>
+          </section>
+
+          <section class="card" aria-labelledby="system-title">
+            <h2 id="system-title">Sensor &amp; system</h2>
+            <dl class="info">
+              <dt>Gate sensor</dt><dd id="i-sensor">—</dd>
+              <dt>Beam</dt><dd id="i-beam">—</dd>
+              <dt>GPIO</dt><dd id="i-gpio">—</dd>
+              <dt>Triggers</dt><dd id="i-triggers">—</dd>
+              <dt>Ignored</dt><dd id="i-ignored">—</dd>
+              <dt>Race state</dt><dd id="i-race">—</dd>
+              <dt>Hostname</dt><dd id="i-host">—</dd>
+              <dt>IP address</dt><dd id="i-ip">—</dd>
+              <dt>Wi-Fi</dt><dd id="i-wifi">—</dd>
+              <dt>Device</dt><dd id="i-model">—</dd>
+              <dt>CPU temp</dt><dd id="i-temp">—</dd>
+              <dt>Load</dt><dd id="i-load">—</dd>
+              <dt>Uptime</dt><dd id="i-uptime">—</dd>
+            </dl>
+          </section>
+        </div>
+      </div>
     </main>
   </body>
 </html>
