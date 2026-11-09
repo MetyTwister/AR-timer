@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101820" />
+    <title>GPIO 17 Monitor</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body class="state-connecting">
+    <main class="monitor" aria-labelledby="page-title">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">17</div>
+        <div>
+          <p class="eyebrow">RASPBERRY PI · INPUT MONITOR</p>
+          <h1 id="page-title">GPIO 17</h1>
+        </div>
+        <div class="connection" id="connection" role="status">
+          <span class="connection-dot" aria-hidden="true"></span>
+          <span id="connection-text">Connecting</span>
+        </div>
+      </header>
+
+      <section class="status-panel" aria-live="polite" aria-atomic="true">
+        <p class="status-label">CURRENT PIN STATE</p>
+        <div class="state-icon" aria-hidden="true">
+          <span class="state-icon-inner"></span>
+        </div>
+        <h2 id="pin-state">Reading pin…</h2>
+        <p class="status-detail" id="status-detail">Waiting for the Raspberry Pi</p>
+      </section>
+
+      <footer class="footer">
+        <span>BCM GPIO 17</span>
+        <span class="footer-divider" aria-hidden="true">·</span>
+        <span>Pull-up input</span>
+        <span class="footer-divider" aria-hidden="true">·</span>
+        <span id="last-updated">No reading yet</span>
+      </footer>
+    </main>
+  </body>
+</html>
